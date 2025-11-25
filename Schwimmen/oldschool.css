@@ -1,0 +1,554 @@
+/* 
+    oldschool-inspired CSS 
+    This file creates a retro, psychedelic, CRT-monitor aesthetic.
+*/
+
+:root {
+    /* Color Palette Variables */
+    --bg-color: #0a3b1f;
+    /* Dark blue-grey background */
+    --card-bg: #edf2f4;
+    /* Off-white for cards */
+    --card-border: #8d99ae;
+    /* Grey border */
+    --accent-red: #ef233c;
+    /* Bright red for Hearts/Diamonds/Knock */
+    --accent-blue: #3a86ff;
+    /* Bright blue for Skip/Highlights */
+    --accent-gold: #ffb703;
+    /* Gold for selection/scores */
+    --accent-magenta: #c026d3;
+    /* Magenta for Swap All */
+    --text-color: #edf2f4;
+    /* Light text */
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black for shadows */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'VT323', monospace;
+    /* The pixel font */
+    margin: 0;
+    overflow: hidden;
+    /* Prevents scrollbars */
+    height: 100vh;
+    /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 
+       Psychedelic background gradient:
+       A radial gradient that creates a subtle glowing center.
+    */
+    background: radial-gradient(circle at 50% 50%, #0a3b1f 0%, #1a1b26 100%);
+}
+
+/* 
+   CRT (Cathode Ray Tube) Effects 
+   These create the "old monitor" look.
+*/
+
+/* The static grid overlay */
+.crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* 
+       Complex gradient to create a grid/mesh pattern 
+       simulating pixels on a screen.
+       */
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    /* Size of the grid lines */
+    pointer-events: none;
+    /* Allows clicking "through" this layer */
+    z-index: 100;
+    /* Sits on top of everything */
+}
+
+/* The moving scanline bar */
+.scanline {
+    width: 100%;
+    height: 100px;
+    z-index: 101;
+    /* Fading white bar */
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+    opacity: 0.1;
+    position: absolute;
+    bottom: 100%;
+    /* Animates the bar moving down repeatedly */
+    animation: scanline 10s linear infinite;
+    pointer-events: none;
+}
+
+/* Animation definition for the scanline */
+@keyframes scanline {
+    0% {
+        bottom: 100%;
+    }
+
+    100% {
+        bottom: -100px;
+    }
+}
+
+/* Main Title Styling */
+h1 {
+    font-size: 4rem;
+    /* 
+       Double text-shadow to create a 3D/glitch effect:
+       Red shadow offset +4px, Blue shadow offset -2px
+    */
+    text-shadow: 4px 4px 0px var(--accent-red), -2px -2px 0px var(--accent-blue);
+    margin: 0 0 20px 0;
+    letter-spacing: 5px;
+    transform: skew(-5deg);
+    /* Slants the text slightly */
+    text-align: center;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    z-index: 10;
+    /* Ensures it sits below the CRT overlay but above background */
+}
+
+#game-table {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.area-label {
+    font-size: 1.5rem;
+    color: var(--accent-gold);
+    text-shadow: 2px 2px 0px #000;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.card-row {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    min-height: 140px;
+    /* Reserves space so layout doesn't jump when empty */
+}
+
+/* 
+   Card Styling 
+   Applies to player cards, opponent cards, and selected cards.
+*/
+.card,
+.opponent-card,
+.Selectedcard {
+    width: 90px;
+    height: 130px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 4px solid #fff;
+    /* Thick white border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    /* Hard shadow (no blur) for retro feel */
+    box-shadow: 5px 5px 0px var(--shadow-color);
+    transition: transform 0.1s, box-shadow 0.1s;
+    /* Smooth movement */
+    cursor: pointer;
+    position: relative;
+}
+
+/* Hover Effect: Card pops up and shadow grows */
+.card:hover,
+.Selectedcard:hover {
+    transform: translateY(-5px) scale(1.05);
+    /* Move up and grow slightly */
+    box-shadow: 5px 10px 0px var(--shadow-color);
+    /* Shadow gets longer */
+    z-index: 20;
+}
+
+/* Selected Card State */
+.Selectedcard {
+    border-color: var(--accent-gold);
+    /* Gold border */
+    transform: translateY(-10px);
+    /* Moves up more than hover */
+    box-shadow: 5px 15px 0px var(--shadow-color);
+    /* Longest shadow */
+    background-color: #fff;
+}
+
+/* Opponent Card Back Pattern */
+.opponent-card {
+    /* Repeating diagonal stripes */
+    background: repeating-linear-gradient(45deg,
+            var(--accent-red),
+            var(--accent-red) 10px,
+            #d90429 10px,
+            #d90429 20px);
+    border-color: #fff;
+    color: white;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* 
+   Suit Colors 
+   Uses the data-suit attribute we added to the JS.
+*/
+.card[data-suit="♥"],
+.card[data-suit="♦"] {
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Player Zone Container */
+.player-zone {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--accent-gold);
+    /* Solid gold border */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    /* Needed for absolute positioning of score */
+}
+
+/* Score Badge */
+.score-display {
+    position: absolute;
+    top: -20px;
+    /* Moves it partially outside the top */
+    left: 20px;
+    background: var(--accent-red);
+    padding: 5px 15px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 0px #000;
+    transform: rotate(-5deg);
+    /* Jaunty angle */
+}
+
+.score-display .label {
+    font-size: 1rem;
+    display: block;
+    line-height: 1;
+}
+
+#score-area {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Buttons */
+#controls-area {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.btn {
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.1s;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.btn-skip {
+    background-color: var(--accent-blue);
+    color: white;
+    /* Solid color shadow for 3D effect */
+    box-shadow: 0 6px 0 #003566;
+}
+
+.btn-knock {
+    background-color: var(--accent-red);
+    color: white;
+    box-shadow: 0 6px 0 #8d0801;
+}
+
+.btn-swapall {
+    background-color: var(--accent-magenta);
+    color: white;
+    box-shadow: 0 6px 0 #66035e;
+}
+
+/* Button Click Effect */
+.btn:active {
+    transform: translateY(6px);
+    text-shadow: 4px 4px 0px var(--accent-red), -2px -2px 0px var(--accent-blue);
+    margin: 0 0 20px 0;
+    letter-spacing: 5px;
+    transform: skew(-5deg);
+    /* Slants the text slightly */
+    text-align: center;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    z-index: 10;
+    /* Ensures it sits below the CRT overlay but above background */
+}
+
+#game-table {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.area-label {
+    font-size: 1.5rem;
+    color: var(--accent-gold);
+    text-shadow: 2px 2px 0px #000;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.card-row {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    min-height: 140px;
+    /* Reserves space so layout doesn't jump when empty */
+}
+
+/* 
+   Card Styling 
+   Applies to player cards, opponent cards, and selected cards.
+*/
+.card,
+.opponent-card,
+.Selectedcard {
+    width: 90px;
+    height: 130px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 4px solid #fff;
+    /* Thick white border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    /* Hard shadow (no blur) for retro feel */
+    box-shadow: 5px 5px 0px var(--shadow-color);
+    transition: transform 0.1s, box-shadow 0.1s;
+    /* Smooth movement */
+    cursor: pointer;
+    position: relative;
+}
+
+/* Hover Effect: Card pops up and shadow grows */
+.card:hover,
+.Selectedcard:hover {
+    transform: translateY(-5px) scale(1.05);
+    /* Move up and grow slightly */
+    box-shadow: 5px 10px 0px var(--shadow-color);
+    /* Shadow gets longer */
+    z-index: 20;
+}
+
+/* Selected Card State */
+.Selectedcard {
+    border-color: var(--accent-gold);
+    /* Gold border */
+    transform: translateY(-10px);
+    /* Moves up more than hover */
+    box-shadow: 5px 15px 0px var(--shadow-color);
+    /* Longest shadow */
+    background-color: #fff;
+}
+
+/* Opponent Card Back Pattern */
+.opponent-card {
+    /* Repeating diagonal stripes */
+    background: repeating-linear-gradient(45deg,
+            var(--accent-red),
+            var(--accent-red) 10px,
+            #d90429 10px,
+            #d90429 20px);
+    border-color: #fff;
+    color: white;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* 
+   Suit Colors 
+   Uses the data-suit attribute we added to the JS.
+*/
+.card[data-suit="♥"],
+.card[data-suit="♦"] {
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Player Zone Container */
+.player-zone {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--accent-gold);
+    /* Solid gold border */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    /* Needed for absolute positioning of score */
+}
+
+/* Score Badge */
+.score-display {
+    position: absolute;
+    top: -20px;
+    /* Moves it partially outside the top */
+    left: 20px;
+    background: var(--accent-red);
+    padding: 5px 15px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 0px #000;
+    transform: rotate(-5deg);
+    /* Jaunty angle */
+}
+
+.score-display .label {
+    font-size: 1rem;
+    display: block;
+    line-height: 1;
+}
+
+#score-area {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Buttons */
+#controls-area {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.btn {
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.1s;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.btn-skip {
+    background-color: var(--accent-blue);
+    color: white;
+    /* Solid color shadow for 3D effect */
+    box-shadow: 0 6px 0 #003566;
+}
+
+.btn-knock {
+    background-color: var(--accent-red);
+    color: white;
+    box-shadow: 0 6px 0 #8d0801;
+}
+
+.btn-swapall {
+    background-color: var(--accent-magenta);
+    color: white;
+    box-shadow: 0 6px 0 #66035e;
+}
+
+/* Button Click Effect */
+.btn:active {
+    transform: translateY(6px);
+    /* Move down to 'press' the button */
+    box-shadow: none;
+    /* Remove shadow to make it look flat against surface */
+}
+
+.btn:hover {
+    filter: brightness(1.1);
+    /* Slightly brighter on hover */
+}
+
+/* Game Log Styling */
+.game-log {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--accent-gold);
+    padding: 10px;
+    border: 1px dashed var(--accent-gold);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 0 10px rgba(255, 183, 3, 0.2);
+}
+
+.btn-back {
+    background-color: #333;
+    color: white;
+    box-shadow: 0 6px 0 #000;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 200;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-family: 'VT323', monospace;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.btn-back:active {
+    transform: translateY(6px);
+    box-shadow: none;
+}
+
+/* Red suits color override */
+.card[data-suit="♥"],
+.card[data-suit="♦"],
+.Selectedcard[data-suit="♥"],
+.Selectedcard[data-suit="♦"] {
+    color: var(--accent-red);
+}

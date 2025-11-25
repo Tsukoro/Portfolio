@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schwimmen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="oldschool.css">
+</head>
+
+<body>
+    <div class="crt-overlay"></div>
+    <div class="scanline"></div>
+    <a href="../index.html" class="btn-back">← Back to Portfolio</a>
+    <div class="game-container">
+
+        <h1>SCHWIMMEN</h1>
+        <div id="game-log" class="game-log">Welcome to Schwimmen!</div>
+
+        <div id="game-table">
+            <div class="area-label">OPPONENT</div>
+            <!-- The script will inject the opponent's cards here -->
+            <div id="opponent-area" class="card-row"></div>
+
+            <!-- Center / Community Cards Area -->
+            <div class="center-stage">
+                <div class="area-label">COMMUNITY</div>
+                <!-- The script will inject the center cards here -->
+                <div id="center-area" class="card-row"></div>
+            </div>
+
+            <!-- Player's Zone: Contains Score, Hand, and Controls -->
+            <div class="player-zone">
+                <!-- Score Badge: Rotated and positioned absolutely to look like a sticker -->
+                <div class="score-display">
+                    <span class="label">SCORE</span>
+                    <div id="score-area">0</div>
+                </div>
+
+                <div class="area-label">YOUR HAND</div>
+                <!-- The script will inject the player's cards here -->
+                <div id="player-area" class="card-row"></div>
+
+                <!-- Control Buttons -->
+                <div id="controls-area">
+                    <button onclick="skip()" class="btn btn-skip">
+                        <span class="btn-content">SKIP</span>
+                    </button>
+                    <button onclick="knock()" class="btn btn-knock">
+                        <span class="btn-content">KNOCK</span>
+                    </button>
+                    <button onclick="swapALL()" class="btn btn-swapall">
+                        <span class="btn-content">SWAP ALL</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Re-using the same game logic script! -->
+    <script src="script.js"></script>
+</body>
+
+</html>
