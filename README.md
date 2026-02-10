@@ -17,3 +17,8 @@ I built this from scratch to get hands-on experience with core web technologies,
 
 ## Getting Started
 Simply clone the repo and open `index.html` in your favorite browser to check it out.
+
+## Migration of a uni project, from Render to static (Currently in progress)
+The goal was to ditch the hosting of our team's data science project, to improve user experience.
+For this goal, I dediced to rewrite the Python code that was handling our callbacks on the dash based webpage, so that it generated all possible
+value combination in JSON files. Then, I will just load the values from the files with Plotly.js to improve responsiveness and also work on the Front-End of the page.
